@@ -5,8 +5,19 @@ export default function YourTodo() {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
 
-  const handleEdit = () => {};
-  const handleDelete = () => {};
+  const handleEdit = (e, id) => {
+    let t = todos.find((item) => item.id === id);
+    setTodo(t.todo);
+    let newTodos = todos.filter((i) => {
+      return i.id !== id;
+    });
+    setTodos(newTodos);
+  };
+
+  const handleDelete = (e, id) => {
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+  };
   const handleAdd = () => {
     if (todo.trim() === "") return;
     setTodos([...todos, { id: uuidv4(), todo, isComplete: false }]);
@@ -50,6 +61,9 @@ export default function YourTodo() {
         <div className="m-3 text-xl w-[80vw] ">
           Your Todos
           <br />
+          {todos.length === 0 && (
+            <div className="mt-5">No todos to display</div>
+          )}
           {todos.map((item, index) => {
             return (
               <div className="mt-5 flex justify-between w-[80vw]" key={index}>
@@ -60,18 +74,22 @@ export default function YourTodo() {
                     className="mx-3"
                     name={item.id}
                     onChange={handleCheckbox}
-                  />{" "}
+                  />
                   {item.todo}
                 </div>
                 <div>
                   <button
-                    onClick={handleEdit}
+                    onClick={(e) => {
+                      handleEdit(e, item.id);
+                    }}
                     className="bg-white h-10 w-20 rounded-lg mx-3 text-black hover:bg-slate-200"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={handleDelete}
+                    onClick={(e) => {
+                      handleDelete(e, item.id);
+                    }}
                     className="bg-white h-10 w-20 rounded-lg text-black hover:bg-slate-200 text-lg"
                   >
                     Delete
